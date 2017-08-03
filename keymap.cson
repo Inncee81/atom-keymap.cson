@@ -2,7 +2,8 @@
 #
 # Atom keymaps work similarly to style sheets. Just as style sheets use
 # selectors to apply styles to elements, Atom keymaps use selectors to associate
-# keystrokes with events in specific contexts.
+# keystrokes with events in specific contexts. Unlike style sheets however,
+# each selector can only be declared once.
 #
 # You can create a new keybinding in this file by typing "key" and then hitting
 # tab.
@@ -17,32 +18,97 @@
 #   'ctrl-p': 'core:move-down'
 #
 # You can find more information about keymaps in these guides:
-# * https://atom.io/docs/latest/using-atom-basic-customization#customizing-key-bindings
-# * https://atom.io/docs/latest/behind-atom-keymaps-in-depth
+# * http://flight-manual.atom.io/using-atom/sections/basic-customization/#_customizing_keybindings
+# * http://flight-manual.atom.io/behind-atom/sections/keymaps-in-depth/
+#
+# If you're having trouble with your keybindings not working, try the
+# Keybinding Resolver: `Cmd+.` on macOS and `Ctrl+.` on other platforms. See the
+# Debugging Guide for more information:
+# * http://flight-manual.atom.io/hacking-atom/sections/debugging/#check-the-keybindings
 #
 # This file uses CoffeeScript Object Notation (CSON).
-# If you are unfamiliar with CSON, you can read more about it here:
-# https://github.com/bevry/cson#what-is-cson
-'atom-workspace':
-  'shift-enter': 'terminal-status:toggle'
-'atom-text-editor:not(.mini).vim-mode:not(.insert-mode)':
-  'shift-enter': 'terminal-status:toggle'
-'.editor':
-  'cmd-i': 'editor:auto-indent'
-'body':
-  # Moving between panes
-  'cmd-k j': 'window:focus-pane-below'
-  'cmd-k k': 'window:focus-pane-above'
-  'cmd-k h': 'window:focus-pane-on-left'
-  'cmd-k l': 'window:focus-pane-on-right'
+# If you are unfamiliar with CSON, you can read more about it in the
+# Atom Flight Manual:
+# http://flight-manual.atom.io/using-atom/sections/basic-customization/#_cson
+'atom-text-editor:not(.mini).vim-mode:not(.insert-mode):not(.jumpy-jump-mode)':
+  'f': 'jumpy:toggle'
 
-  # Creating new panes
-  'cmd-shift-k j': 'pane:split-down'
-  'cmd-shift-k k': 'pane:split-up'
-  'cmd-shift-k h': 'pane:split-left'
-  'cmd-shift-k l': 'pane:split-right'
+##
+## multi-cursor-plus
+##
+'atom-workspace atom-text-editor':
+  # Unset editor keybindings (conflict with multi-cursor-plus)
+  'alt-cmd-o': 'unset!'
+  'alt-h':        'unset!'
+  'alt-l':       'unset!'
+  'alt-shift-h':  'unset!'
+  'alt-shift-l': 'unset!'
+  'ctrl-alt-r': 'unset!'
+
+'atom-text-editor.vim-mode-plus':
+  'ctrl-s': 'sort-lines:sort'
+
+'atom-workspace':
+  # the advanced-open-file sets this by default, but Nuclide overrides it, so here we have to
+  # override nuclide.
+  'alt-cmd-o': 'advanced-open-file:toggle'
+
+  # move between panes
+  'cmd-k l': 'window:focus-pane-on-right'
+  'cmd-k h': 'window:focus-pane-on-left'
+  'cmd-k k': 'window:focus-pane-above'
+  'cmd-k j': 'window:focus-pane-below'
+
+  # Create new panes
+  'cmd-shift-k l': 'pane:split-right-and-copy-active-item'
+  'cmd-shift-k h': 'pane:split-left-and-copy-active-item'
+  'cmd-shift-k k': 'pane:split-up-and-copy-active-item'
+  'cmd-shift-k j': 'pane:split-down-and-copy-active-item'
+
+  # cursor history
+  'ctrl-i': 'cursor-history:next'
+  'ctrl-o': 'cursor-history:prev'
+  'ctrl-cmd-i': 'cursor-history:next-within-editor'
+  'ctrl-cmd-o': 'cursor-history:prev-within-editor'
+  #
+  # multi-cursor-plus
+  #
+  'alt-x':                'multi-cursor-plus:mark'
+  'alt-k':               'multi-cursor-plus:move-up'
+  'alt-j':             'multi-cursor-plus:move-down'
+  'alt-h':             'multi-cursor-plus:move-left'
+  'alt-l':            'multi-cursor-plus:move-right'
+  'ctrl-alt-h':        'multi-cursor-plus:move-to-beginning-of-word'
+  'ctrl-alt-l':       'multi-cursor-plus:move-to-end-of-word'
+  'alt-home':             'multi-cursor-plus:move-to-first-character-of-line'
+  'alt-end':              'multi-cursor-plus:move-to-end-of-line'
+  'ctrl-alt-home':        'multi-cursor-plus:move-to-top'
+  'ctrl-alt-end':         'multi-cursor-plus:move-to-bottom'
+  'alt-shift-k':          'multi-cursor-plus:select-up'
+  'alt-shift-j':          'multi-cursor-plus:select-down'
+  'alt-shift-h':          'multi-cursor-plus:select-left'
+  'alt-shift-l':          'multi-cursor-plus:select-right'
+  'ctrl-alt-shift-h':  'multi-cursor-plus:select-to-beginning-of-word'
+  'ctrl-alt-shift-l': 'multi-cursor-plus:select-to-end-of-word'
+  'alt-shift-home':       'multi-cursor-plus:select-to-first-character-of-line'
+  'alt-shift-end':        'multi-cursor-plus:select-to-end-of-line'
+  'ctrl-alt-shift-home':  'multi-cursor-plus:select-to-top'
+  'ctrl-alt-shift-end':   'multi-cursor-plus:select-to-bottom'
+
+'atom-text-editor.vim-mode-plus.normal-mode':
+  'g f':      'open-this:here'
+  'ctrl-w f': 'open-this:split-down'
+  'ctrl-w F': 'open-this:split-right'
 
 'atom-workspace atom-text-editor:not([mini])':
-  'alt-shift-k': 'editor:add-selection-above'
-  'alt-shift-j': 'editor:add-selection-below'
+  # Unset editor keybindings (conflict with multi-cursor-plus)
+  'alt-shift-k': 'unset!'
+  'alt-shift-j': 'unset!'
 
+'atom-text-editor.ex-mode-editor':
+  'ctrl-[': 'ex-mode:close'
+
+'atom-text-editor.vim-mode-plus:not(.insert-mode)':
+  'shift-S': 'vim-mode-plus:surround-word'
+  'd s': 'vim-mode-plus:delete-surround-any-pair'
+  'c s': 'vim-mode-plus:change-surround-any-pair'
